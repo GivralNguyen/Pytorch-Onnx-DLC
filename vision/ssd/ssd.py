@@ -86,16 +86,12 @@ class SSD(nn.Module):
 
         confidences = torch.cat(confidences, 1)
         locations = torch.cat(locations, 1)
+        locations_raw = locations.cpu().detach().numpy()
+        confidences_raw = confidences.cpu().detach().numpy()
+        locations_raw.tofile("locations.raw")
+        confidences_raw.tofile("confidences.raw")
         
-        if self.is_test:
-            confidences = F.softmax(confidences, dim=2)
-            boxes = box_utils.convert_locations_to_boxes(
-                locations, self.priors, self.config.center_variance, self.config.size_variance
-            )
-            boxes = box_utils.center_form_to_corner_form(boxes)
-            return confidences, boxes
-        else:
-            return confidences, locations
+        return confidences, locations
 
     def compute_header(self, i, x):
         confidence = self.classification_headers[i](x)
