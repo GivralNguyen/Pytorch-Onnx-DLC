@@ -14,12 +14,14 @@
 -Convert image to raw using .tofile and transpose
  
  >image  =  self.transform(image) #3,300,300
->images  =  image.unsqueeze(0) #1,3,300,300
->images  =  images.to(self.device)
->raw_img  =  images.cpu().numpy()
->raw_img  =  np.transpose(raw_img,(0,2,3,1)) 
->raw_img.tofile("car_transpose.raw")
+images  =  image.unsqueeze(0) #1,3,300,300
+images  =  images.to(self.device)
+raw_img  =  images.cpu().numpy()
+raw_img  =  np.transpose(raw_img,(0,2,3,1)) 
+raw_img.tofile("car_transpose.raw")
+>
 - Use snpe-net-run to test output. Input image list is raw images line by line
 >snpe-net-run --container mb1-ssd-sim.dlc --input_list image_list.txt --set_output_tensors=confidences,locations
 >
 - Test dlc using rundlc.py 
+
